@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mastering_firebase/controllers/registration_controllers.dart';
-import 'package:mastering_firebase/utils/common.dart';
+import 'package:mastering_firebase/services/auth_service.dart';
 import 'package:mastering_firebase/utils/widgets/color_constants.dart';
 import 'package:mastering_firebase/utils/widgets/common_functions.dart';
 import 'package:mastering_firebase/utils/widgets/textField.dart';
 import 'package:mastering_firebase/views/dashboard/home_page.dart';
 import 'package:mastering_firebase/views/login/register.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatelessWidget {
   Login({Key? key}) : super(key: key);
@@ -26,7 +26,6 @@ class Login extends StatelessWidget {
       backgroundColor: ColorConstants.appColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             width: MediaQuery.of(context).size.width,
@@ -36,6 +35,8 @@ class Login extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.0725),
+
                 const Text(
                   'Mastering Firebase',
                   style: TextStyle(
@@ -91,12 +92,10 @@ class Login extends StatelessWidget {
                         await FirebaseAuth.instance.signInWithEmailAndPassword(
                             email: emailController.text,
                             password: passwordController.text);
+
                         showToast(msg: "Successfully logged in.");
                         userRegistrationControllers.loginLoading.value = false;
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setString(Common.loginStatus, "1");
-                        Get.offAll(() => const HomePage());
+                        Get.off(() => HomePage());
                       } catch (e) {
                         showToast(msg: e.toString());
                         userRegistrationControllers.loginLoading.value = false;
@@ -149,38 +148,33 @@ class Login extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.to(() => const HomePage());
+                    socialMediaSignIn(
+                      image: "assets/google_sign_in.svg",
+                      onPressed: () async {
+                        await AuthService().signInWithGoogle();
+                        try {
+                          if (FirebaseAuth.instance.currentUser != null) {
+                            Get.off(() => const HomePage());
+                          }
+                        } catch (e) {
+                          showToast(msg: "Google authentication failed");
+                        }
                       },
-                      icon: Image.asset(
-                        "assets/google_1.png",
-                        width: 50,
-                        height: 50,
-                      ),
                     ),
                     const SizedBox(width: 10),
-                    IconButton(
-                      onPressed: () {
-                        Get.to(() => const HomePage());
-                      },
-                      icon: Container(
-                        width: 50,
-                        height: 50,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(100)),
-                        child: Center(
-                          child: Image.asset(
-                            "assets/apple.png",
-                          ),
-                        ),
-                      ),
+                    socialMediaSignIn(
+                        image: "assets/apple_sign_in.svg",
+                        onPressed: () {},
+                        imageColor: Colors.black),
+                    const SizedBox(width: 10),
+                    socialMediaSignIn(
+                      image: "assets/facebook_sign_in.svg",
+                      onPressed: () {},
                     ),
                   ],
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.16),
+                // SizedBox(height: MediaQuery.of(context).size.height * 0.16),
+                Spacer(),
                 RichText(
                   text: TextSpan(
                     children: [
@@ -215,5 +209,27 @@ class Login extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  socialMediaSignIn(
+      {required String image,
+      required void Function()? onPressed,
+      imageColor}) {
+    return IconButton(
+        onPressed: onPressed,
+        icon: Container(
+          width: 55,
+          height: 55,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: SvgPicture.asset(
+              image,
+              color: imageColor,
+            ),
+          ),
+        ));
   }
 }

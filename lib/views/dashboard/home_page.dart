@@ -17,17 +17,15 @@ class HomePage extends StatelessWidget {
           onPressed: () async {
             try {
               await FirebaseAuth.instance.signOut();
-              showToast(msg: "Successfully logged out.");
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.clear();
               Get.offAll(() => Login());
+              showToast(msg: "Successfully logged out.");
             } catch (e) {
               showToast(msg: e.toString());
             }
           },
-          child: Text('Sign out'),
+          child: const Text('Sign out'),
         ),
-        SizedBox(width: 10)
+        const SizedBox(width: 10)
       ]),
       body: SafeArea(
         child: Container(),

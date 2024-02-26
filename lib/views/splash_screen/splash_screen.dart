@@ -1,11 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mastering_firebase/utils/common.dart';
 import 'package:mastering_firebase/views/dashboard/home_page.dart';
 import 'package:mastering_firebase/views/login/login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,7 +17,11 @@ class SplashScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              getPreference();
+              if (FirebaseAuth.instance.currentUser != null) {
+                Get.off(() => const HomePage());
+              } else {
+                Get.off(() => Login());
+              }
             });
           }
           return SafeArea(
@@ -35,20 +38,5 @@ class SplashScreen extends StatelessWidget {
         },
       ),
     );
-  }
-
-  getPreference() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString(Common.loginStatus) == "1") {
-      Get.off(
-        () => const HomePage(),
-        duration: const Duration(milliseconds: 2500),
-      );
-    } else {
-      Get.off(
-        () => Login(),
-        duration: const Duration(milliseconds: 2500),
-      );
-    }
   }
 }

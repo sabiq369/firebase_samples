@@ -30,7 +30,7 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color(0xff1a73e8),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -39,7 +39,7 @@ class Register extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
@@ -65,8 +65,8 @@ class Register extends StatelessWidget {
                   hintText: "Enter Your Name",
                   controller: nameController,
                   focusNode: nameFocusNode,
-                  fillColor: ColorConstants.appColor,
-                  hintColor: Colors.white,
+                  fillColor: Colors.white,
+                  hintColor: Colors.black,
                   keyboardType: TextInputType.name,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -82,11 +82,11 @@ class Register extends StatelessWidget {
                   hintText: "Enter Your Email",
                   controller: emailController,
                   focusNode: emailFocusNode,
-                  fillColor: ColorConstants.appColor,
-                  hintColor: Colors.white,
+                  fillColor: Colors.white,
+                  hintColor: Colors.black,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 const Text(
                   'Password',
                   style: TextStyle(
@@ -100,11 +100,11 @@ class Register extends StatelessWidget {
                   controller: passwordController,
                   focusNode: passwordFocusNode,
                   showSuffixIcon: true,
-                  fillColor: ColorConstants.appColor,
-                  hintColor: Colors.white,
+                  fillColor: Colors.white,
+                  hintColor: Colors.black,
                   keyboardType: TextInputType.visiblePassword,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 const Text(
                   'Confirm Password',
                   style: TextStyle(
@@ -118,11 +118,11 @@ class Register extends StatelessWidget {
                   controller: confirmPasswordController,
                   focusNode: confirmFocusNode,
                   showSuffixIcon: true,
-                  fillColor: ColorConstants.appColor,
-                  hintColor: Colors.white,
+                  fillColor: Colors.white,
+                  hintColor: Colors.black,
                   keyboardType: TextInputType.visiblePassword,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                 Align(
                   child: Obx(() {
                     return ElevatedButton(
@@ -147,7 +147,10 @@ class Register extends StatelessWidget {
                           } catch (e) {
                             userRegistrationControllers.registerLoading.value =
                                 false;
-                            showToast(msg: e.toString());
+                            showToast(
+                                msg: e.toString(),
+                                bgColor: Colors.white,
+                                txtColor: Colors.black);
                           }
                         } else {
                           showToast(
@@ -180,7 +183,7 @@ class Register extends StatelessWidget {
                     );
                   }),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                Spacer(),
                 Align(
                   child: RichText(
                     text: TextSpan(
@@ -195,9 +198,7 @@ class Register extends StatelessWidget {
                         WidgetSpan(
                           alignment: PlaceholderAlignment.middle,
                           child: TextButton(
-                            onPressed: () => Get.offAll(
-                              () => Login(),
-                            ),
+                            onPressed: () => Get.back(),
                             child: const Text('Login now',
                                 style: TextStyle(
                                     fontStyle: FontStyle.italic,
@@ -210,6 +211,7 @@ class Register extends StatelessWidget {
                     ),
                   ),
                 ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               ],
             ),
           ),

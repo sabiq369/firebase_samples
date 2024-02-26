@@ -38,6 +38,8 @@ dependencies:
   google_sign_in:
   fluttertoast: ^8.2.4
   shared_preferences:
+  flutter_svg:
+
 
 
 
