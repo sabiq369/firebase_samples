@@ -26,6 +26,7 @@ class Login extends StatelessWidget {
       backgroundColor: ColorConstants.appColor,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             width: MediaQuery.of(context).size.width,
